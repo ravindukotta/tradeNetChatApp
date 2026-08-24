@@ -1,0 +1,17 @@
+services:
+  tradenet-chat-application:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      # H2 file-mode DB lives on the named volume below, not the container's
+      # writable layer, so `docker compose down` (without -v) preserves it.
+      - CHAT_DB_PATH=/data/chatdb
+      # Demo-only shared password for the 4 seeded accounts (alice/bob/carol/dave).
+      # Override here if you want a different one.
+      - DEMO_PASSWORD=password123
+    volumes:
+      - chat-data:/data
+
+volumes:
+  chat-data:

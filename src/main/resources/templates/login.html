@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+
+<p th:if="${param.error}" style="color:red;">Invalid username or password.</p>
+<p th:if="${param.logout}">You have been logged out.</p>
+
+<form method="post" th:action="@{/login}">
+    <label>Username
+        <input type="text" name="username" required autofocus/>
+    </label>
+    <br/>
+    <label>Password
+        <input type="password" name="password" required/>
+    </label>
+    <br/>
+    <button type="submit">Log in</button>
+</form>
+
+<p><small>Demo accounts: alice / bob / carol / dave, shared password configured via
+    <code>DEMO_PASSWORD</code> (default <code>password123</code>).</small></p>
+</body>
+</html>

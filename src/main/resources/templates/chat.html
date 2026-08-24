@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Chat</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; display: flex; height: 100vh; }
+        #sidebar { width: 200px; border-right: 1px solid #ccc; padding: 1rem; box-sizing: border-box; overflow-y: auto; }
+        #sidebar h2 { font-size: 1rem; margin-top: 0; }
+        #sidebar ul { list-style: none; padding: 0; margin: 0; }
+        #sidebar li { margin-bottom: 0.5rem; }
+        #sidebar a { text-decoration: none; color: #333; }
+        #sidebar a.active { font-weight: bold; color: #06c; }
+        #main { flex: 1; display: flex; flex-direction: column; }
+        #topbar { padding: 0.5rem 1rem; border-bottom: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
+        #connStatus { font-size: 0.8rem; color: #888; }
+        #connStatus.connected { color: #2a2; }
+        #connStatus.disconnected { color: #c22; }
+        #messages { flex: 1; overflow-y: auto; padding: 1rem; list-style: none; margin: 0; }
+        #messages li { margin-bottom: 0.5rem; max-width: 60%; }
+        #messages li.me { margin-left: auto; text-align: right; }
+        #messages li .bubble { display: inline-block; padding: 0.4rem 0.6rem; border-radius: 8px; background: #eee; }
+        #messages li.me .bubble { background: #d7ebff; }
+        #messages li .meta { font-size: 0.7rem; color: #888; }
+        #composer { display: flex; padding: 0.5rem; border-top: 1px solid #ccc; }
+        #composer input[type="text"] { flex: 1; padding: 0.5rem; }
+        #placeholder { margin: auto; color: #888; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2 th:text="${myUsername}">me</h2>
+    <form method="post" th:action="@{/logout}">
+        <button type="submit">Log out</button>
+    </form>
+    <hr/>
+    <ul>
+        <li th:each="user : ${others}">
+            <a th:href="@{/chat(with=${user.id})}"
+               th:text="${user.username}"
+               th:classappend="${activeWith != null and activeWith == user.id} ? 'active' : ''">username</a>
+        </li>
+    </ul>
+</div>
+
+<div id="main" th:if="${activeWith != null}"
+     th:attr="data-my-id=${myId},data-active-with=${activeWith}">
+    <div id="topbar">
+        <strong th:text="${#lists.size(others) > 0 ? 'Conversation' : ''}">Conversation</strong>
+        <span id="connStatus">Connecting...</span>
+    </div>
+    <ul id="messages"></ul>
+    <form id="composer">
+        <input type="text" id="messageInput" autocomplete="off" placeholder="Type a message..." required/>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<div id="main" th:unless="${activeWith != null}">
+    <p id="placeholder">Select a user on the left to start chatting.</p>
+</div>
+
+<script th:src="@{/js/chat.js}"></script>
+</body>
+</html>

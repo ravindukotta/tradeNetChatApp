@@ -1,0 +1,25 @@
+package com.zuhlke.tradenet.chat.auth;
+
+import com.zuhlke.tradenet.chat.entity.User;
+import com.zuhlke.tradenet.chat.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AppUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    public AppUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No user with username: " + username));
+        return new AppUserPrincipal(user);
+    }
+}
