@@ -37,7 +37,7 @@
     <hr/>
     <ul>
         <li th:each="user : ${others}">
-            <a th:href="@{/chat(with=${user.id})}"
+            <a th:id="${user.id}" th:href="@{/chat(with=${user.id})}"
                th:text="${user.username}"
                th:classappend="${activeWith != null and activeWith == user.id} ? 'active' : ''">username</a>
         </li>

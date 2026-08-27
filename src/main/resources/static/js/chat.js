@@ -118,6 +118,12 @@
                         createdAt: envelope.createdAt,
                         clientMsgId: envelope.clientMsgId
                     });
+                }else {
+                   if (envelope.to !== otherUserId){
+                       updateUnreadCount({
+                           senderId: envelope.from
+                       });
+                   }
                 }
                 // A "deliver" for a different conversation (someone else messaging us
                 // while this one is open) is intentionally dropped - no unread-badge
@@ -146,6 +152,12 @@
             return window.crypto.randomUUID();
         }
         return "cid-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+    }
+
+    function updateUnreadCount(msg) {
+        var userEl = document.getElementById(msg.senderId);
+        var userName = userEl.textContent;
+        userEl.textContent = userName + ": new messages" ;
     }
 
     composerEl.addEventListener("submit", function (event) {
